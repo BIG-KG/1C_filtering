@@ -2,7 +2,6 @@
 
 #include <set>
 #include <stdexcept>
-#include <string>
 #include <utility>
 
 namespace rooms {
@@ -49,7 +48,7 @@ const std::vector<Passage>& State::look() {
   }
 
   for (const PathInfo& path : reply) {
-    int id = graph_.passage_id(path.passage_id);
+    int id = path.passage_id;
     auto entry = expected.find(id);
 
     if (entry == expected.end()) {
@@ -58,8 +57,7 @@ const std::vector<Passage>& State::look() {
 
     expected.erase(entry);
 
-    if (graph_.other_node(id, position_) !=
-        graph_.node_id(path.destination_id)) {
+    if (graph_.other_node(id, position_) != path.destination_id) {
       throw std::runtime_error("LOOK response does not match the graph");
     }
 
@@ -82,8 +80,7 @@ const std::vector<Passage>& State::look() {
 bool State::move(int passageid) {
   int destination = graph_.other_node(passageid, position_);
 
-  bool success = judge_.move(graph_.passage_name(passageid));
-
+  bool success = judge_.move(passageid);
   graph_.update_passage(passageid, success);
 
   if (success) {
@@ -101,7 +98,7 @@ void State::clear(int passageid) {
     throw std::logic_error("CLEAR requires a known broken passage");
   }
 
-  judge_.clear(graph_.passage_name(passageid));
+  judge_.clear(passageid);
   graph_.update_passage(passageid, true);
 
   ++days_;
