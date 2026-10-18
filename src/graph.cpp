@@ -1,5 +1,8 @@
 #include "graph.hpp"
 
+#include <cmath>
+#include <cstddef>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 
@@ -35,6 +38,10 @@ int Graph::add_passage(int nodeid_0, int nodeid_1,
 
 int Graph::number_of_nodes() const { return nodes.size(); }
 
+bool Graph::is_valid_node(int node_id) const {
+  return node_id >= 0 && static_cast<std::size_t>(node_id) < nodes.size();
+}
+
 void Graph::update_price(int passageid, float price) {
   Passage& passage = passages.at(passageid);
   passage.expected_price = price;
@@ -49,7 +56,11 @@ void Graph::update_price(int passageid, float price) {
 }
 
 const std::vector<Passage>& Graph::look(int nodeid) const {
-  return nodes.at(nodeid).passages;
+  if (!is_valid_node(nodeid)) {
+    throw std::out_of_range("Invalid node id");
+  }
+
+  return nodes[nodeid].passages;
 }
 
 bool Graph::needs_look(int nodeid) const {
@@ -81,6 +92,42 @@ void Graph::update_passage(int passageid, bool is_open) {
   passage.known = true;
 
   update_price(passageid, is_open ? 0.0f : cost_of_clearing_a_tunnel);
+}
+
+Graph read_graph() {
+  int nodes_count;
+  int passages_count;
+  float clear_cost;
+
+  std::cin >> nodes_count >> passages_count >> clear_cost;
+  rooms::Graph graph(clear_cost);
+
+  for (int i = 0; i < nodes_count; ++i) {
+    float prize;
+
+    if (!(std::cin >> prize) || prize < 0) {
+      throw std::runtime_error("Invalid room prize");
+    }
+
+    graph.add_node(prize);
+  }
+
+  for (int i = 0; i < passages_count; ++i) {
+    int from;
+    int to;
+    float probability_open;
+
+    if (!(std::cin >> from >> to >> probability_open) ||
+        !graph.is_valid_node(from) || !graph.is_valid_node(to) ||
+        !std::isfinite(probability_open) || probability_open < 0 ||
+        probability_open > 1) {
+      throw std::runtime_error("Invalid passage");
+    }
+
+    graph.add_passage(from, to, 1.0f - probability_open);
+  }
+
+  return graph;
 }
 
 }  // namespace rooms

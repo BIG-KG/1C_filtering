@@ -22,6 +22,7 @@ class Graph {
   int add_passage(int nodeid_0, int nodeid_1, float chance_of_tunnel_collapse);
 
   int number_of_nodes() const;
+  bool is_valid_node(int node_id) const;
 
   const std::vector<Passage>& look(int nodeid) const;
   bool needs_look(int nodeid) const;
@@ -39,5 +40,7 @@ class Graph {
   std::set<int> accessible_nodes;
   const float cost_of_clearing_a_tunnel;
 };
+
+Graph read_graph();
 
 }  // namespace rooms

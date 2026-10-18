@@ -114,7 +114,9 @@ void Traversal::navigate_to(int nodeid) {
   const Graph& graph = state.graph_;
   int start = state.position_;
 
-  graph.nodes.at(nodeid);
+  if (!graph.is_valid_node(nodeid)) {
+    throw std::out_of_range("Invalid node id");
+  }
 
   std::vector<int> parents(graph.nodes.size(), -1);
   std::vector<bool> visited(graph.nodes.size(), false);
