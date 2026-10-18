@@ -21,7 +21,7 @@ std::vector<PathInfo> JudgeInterface::look(std::size_t passage_count) {
       throw std::runtime_error("Failed to read LOOK response");
     }
 
-    if (label != "PATH" || (state != "OK" && state != "BROKEN")) {
+    if (state != "OK" && state != "BROKEN") {
       throw std::runtime_error("Invalid LOOK response");
     }
 
