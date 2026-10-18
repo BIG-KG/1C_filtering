@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iosfwd>
 #include <set>
 #include <utility>
 #include <vector>
@@ -30,12 +31,13 @@ class Graph {
   bool needs_look(int nodeid) const;
   int other_node(int passageid, int nodeid) const;
 
-  void update_price(int passageid, float price);
   void update_passage(int passageid, bool is_open);
 
  private:
   friend class State;
   friend class Traversal;
+
+  void update_price(int passageid, float price);
 
   std::vector<Node> nodes;
   std::vector<Passage> passages;
@@ -44,6 +46,6 @@ class Graph {
   const int start_node;
 };
 
-Graph read_graph();
+Graph read_graph(std::istream& input);
 
 }  // namespace rooms

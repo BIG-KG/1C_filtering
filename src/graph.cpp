@@ -2,7 +2,7 @@
 
 #include <cmath>
 #include <cstddef>
-#include <iostream>
+#include <istream>
 #include <stdexcept>
 #include <vector>
 
@@ -20,6 +20,15 @@ int Graph::add_node(float prize) {
 
 int Graph::add_passage(int nodeid_0, int nodeid_1,
                        float chance_of_tunnel_collapse) {
+  if (!is_valid_node(nodeid_0) || !is_valid_node(nodeid_1)) {
+    throw std::out_of_range("Invalid node id");
+  }
+
+  if (!std::isfinite(chance_of_tunnel_collapse) ||
+      chance_of_tunnel_collapse < 0 || chance_of_tunnel_collapse > 1) {
+    throw std::invalid_argument("Invalid collapse probability");
+  }
+
   passages.emplace_back();
 
   passages.back().nodeid_0 = nodeid_0;
@@ -94,13 +103,13 @@ void Graph::update_passage(int passageid, bool is_open) {
   update_price(passageid, is_open ? 0.0f : cost_of_clearing_a_tunnel);
 }
 
-Graph read_graph() {
+Graph read_graph(std::istream& input) {
   int nodes_count;
   int passages_count;
   float clear_cost;
   int start_node;
 
-  if (!(std::cin >> nodes_count >> passages_count >> clear_cost >> start_node)) {
+  if (!(input >> nodes_count >> passages_count >> clear_cost >> start_node)) {
     throw std::runtime_error("Invalid graph header");
   }
 
@@ -109,7 +118,7 @@ Graph read_graph() {
   for (int i = 0; i < nodes_count; ++i) {
     float prize;
 
-    if (!(std::cin >> prize) || prize < 0) {
+    if (!(input >> prize) || prize < 0) {
       throw std::runtime_error("Invalid room prize");
     }
 
@@ -125,7 +134,7 @@ Graph read_graph() {
     int to;
     float probability_open;
 
-    if (!(std::cin >> from >> to >> probability_open) ||
+    if (!(input >> from >> to >> probability_open) ||
         !graph.is_valid_node(from) || !graph.is_valid_node(to) ||
         !std::isfinite(probability_open) || probability_open < 0 ||
         probability_open > 1) {

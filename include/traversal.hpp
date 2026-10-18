@@ -14,10 +14,6 @@ class Traversal {
  public:
   explicit Traversal(State& state);
 
-  void dfs(int nodeid, int parentid = -1);
-  std::optional<int> dijkstra() const;
-
-  void navigate_to(int nodeid);
   ExpeditionResult run();
 
  private:
@@ -44,7 +40,11 @@ class Traversal {
     float best_profit = 0;
   };
 
+  void dfs(int nodeid, int parentid = -1);
   void dfs_impl(int nodeid, int parentid);
+
+  std::optional<int> dijkstra() const;
+  void navigate_to(int nodeid);
 
   DijkstraData prepare_dijkstra() const;
 
