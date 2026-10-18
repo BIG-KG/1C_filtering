@@ -13,10 +13,12 @@ using price_pd = std::pair<int, float>;
 
 class Graph {
  public:
-  Graph(float clear_cost) : nodes(0), cost_of_clearing_a_tunnel(clear_cost) {}
+  Graph(float clear_cost) : Graph(0, clear_cost) {}
 
-  Graph(int nodes_count, float clear_cost)
-      : nodes(nodes_count), cost_of_clearing_a_tunnel(clear_cost) {}
+  Graph(int nodes_count, float clear_cost, int start_node = 0)
+      : nodes(nodes_count),
+        cost_of_clearing_a_tunnel(clear_cost),
+        start_node(start_node) {}
 
   int add_node(float prize);
   int add_passage(int nodeid_0, int nodeid_1, float chance_of_tunnel_collapse);
@@ -39,6 +41,7 @@ class Graph {
   std::vector<Passage> passages;
   std::set<int> accessible_nodes;
   const float cost_of_clearing_a_tunnel;
+  const int start_node;
 };
 
 Graph read_graph();

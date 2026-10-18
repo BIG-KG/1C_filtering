@@ -26,7 +26,7 @@ class State {
 
   Graph graph_;
   JudgeInterface judge_;
-  int position_ = 0;
+  int position_;
   float collected_prize_ = 0;
   int days_ = 0;
 };

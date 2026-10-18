@@ -98,9 +98,13 @@ Graph read_graph() {
   int nodes_count;
   int passages_count;
   float clear_cost;
+  int start_node;
 
-  std::cin >> nodes_count >> passages_count >> clear_cost;
-  rooms::Graph graph(clear_cost);
+  if (!(std::cin >> nodes_count >> passages_count >> clear_cost >> start_node)) {
+    throw std::runtime_error("Invalid graph header");
+  }
+
+  rooms::Graph graph(0, clear_cost, start_node);
 
   for (int i = 0; i < nodes_count; ++i) {
     float prize;
@@ -110,6 +114,10 @@ Graph read_graph() {
     }
 
     graph.add_node(prize);
+  }
+
+  if (!graph.is_valid_node(start_node)) {
+    throw std::runtime_error("Invalid starting node");
   }
 
   for (int i = 0; i < passages_count; ++i) {

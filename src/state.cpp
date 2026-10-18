@@ -6,9 +6,14 @@
 
 namespace rooms {
 
-State::State(Graph graph) : graph_(std::move(graph)) {
+State::State(Graph graph)
+    : graph_(std::move(graph)), position_(graph_.start_node) {
   if (graph_.nodes.empty()) {
     throw std::invalid_argument("The graph is empty");
+  }
+
+  if (!graph_.is_valid_node(position_)) {
+    throw std::invalid_argument("Invalid starting node");
   }
 
   if (!(graph_.cost_of_clearing_a_tunnel > 0)) {
@@ -102,7 +107,7 @@ void State::clear(int passageid) {
   graph_.update_passage(passageid, true);
 
   ++days_;
-  position_ = 0;
+  position_ = graph_.start_node;
 }
 
 ExpeditionResult State::end() { return judge_.end(); }
