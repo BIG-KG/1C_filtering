@@ -28,4 +28,29 @@ int Graph::add_passage(int nodeid_0, int nodeid_1,
 
 int Graph::number_of_nodes() const { return nodes.size(); }
 
+void Graph::dfs(int nodeid, int parentid) {
+  if (nodeid == parentid) {
+    return;
+  }
+
+  if (!accessible_nodes.insert({nodeid, 0.0f}).second) {
+    return;
+  }
+
+  for (const Passage& passage : nodes[nodeid].passages) {
+    if (passage.expected_price != 0.0f) {
+      continue;
+    }
+
+    int next_nodeid =
+        passage.nodeid_0 == nodeid ? passage.nodeid_1 : passage.nodeid_0;
+
+    dfs(next_nodeid, parentid);
+  }
+}
+
+void Graph::update_price(int passageid, float price) {
+  passages[passageid].expected_price = price;
+}
+
 }  // namespace rooms
