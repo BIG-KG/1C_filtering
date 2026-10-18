@@ -32,7 +32,7 @@ std::vector<PathInfo> JudgeInterface::look(std::size_t passage_count) {
   return paths;
 }
 
-bool JudgeInterface::move(const std::string& passage_id) {
+bool JudgeInterface::move(int passage_id) {
   std::cout << "MOVE " << passage_id << std::endl;
 
   std::string reply = read_reply();
@@ -48,7 +48,7 @@ bool JudgeInterface::move(const std::string& passage_id) {
   throw std::runtime_error("Invalid MOVE response");
 }
 
-void JudgeInterface::clear(const std::string& passage_id) {
+void JudgeInterface::clear(int passage_id) {
   std::cout << "CLEAR " << passage_id << std::endl;
 
   if (read_reply() != "OK") {

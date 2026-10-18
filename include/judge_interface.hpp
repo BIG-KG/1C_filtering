@@ -7,8 +7,8 @@
 namespace rooms {
 
 struct PathInfo {
-  std::string passage_id;
-  std::string destination_id;
+  int passage_id;
+  int destination_id;
   bool is_open;
 };
 
@@ -21,8 +21,8 @@ struct ExpeditionResult {
 class JudgeInterface {
  public:
   std::vector<PathInfo> look(std::size_t passage_count);
-  bool move(const std::string& passage_id);
-  void clear(const std::string& passage_id);
+  bool move(int passage_id);
+  void clear(int passage_id);
   ExpeditionResult end();
 
  private:

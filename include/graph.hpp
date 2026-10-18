@@ -1,8 +1,6 @@
 #pragma once
 
 #include <set>
-#include <string>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -32,13 +30,6 @@ class Graph {
   void update_price(int passageid, float price);
   void update_passage(int passageid, bool is_open);
 
-  void set_node_name(int nodeid, const std::string& name);
-  void set_passage_name(int passageid, const std::string& name);
-
-  int node_id(const std::string& name) const;
-  int passage_id(const std::string& name) const;
-  const std::string& passage_name(int passageid) const;
-
  private:
   friend class State;
   friend class Traversal;
@@ -46,13 +37,6 @@ class Graph {
   std::vector<Node> nodes;
   std::vector<Passage> passages;
   std::set<int> accessible_nodes;
-
-  std::vector<std::string> node_names;
-  std::vector<std::string> passage_names;
-
-  std::unordered_map<std::string, int> node_ids;
-  std::unordered_map<std::string, int> passage_ids;
-
   const float cost_of_clearing_a_tunnel;
 };
 
